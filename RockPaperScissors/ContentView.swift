@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var result: String = ""
     @State private var userScore: Int = 0
     @State private var computerScore: Int = 0
-
+    
     var body: some View {
         VStack {
             
@@ -29,7 +29,6 @@ struct ContentView: View {
                     Spacer()
                     
                     VStack{
-                        
                         Text("Player")
                             .font(.title)
                             .fontWeight(.heavy)
@@ -56,14 +55,14 @@ struct ContentView: View {
                     Spacer()
                     
                     VStack{
-                        
                         Text ("CPU")
                             .font(.title)
                             .fontWeight(.heavy)
-                        
-                        Image("rock")
-                        Image("paper")
-                        Image("scissors")
+                        ForEach(1..<4) { index in
+                                    Image(mapChoiceToImageName(index))
+                                        .resizable()
+                                        .frame(width: 100, height: 100)
+                                }
                     }
                     
                     Spacer()
@@ -97,31 +96,37 @@ struct ContentView: View {
                     
                     VStack{
                         
+                        Spacer()
+                        
                         HStack {
-                            Text("Your choice:")
-                            Image(mapChoiceToString(userChoice))
+                            Text("Your choice: ")
+                            Image(mapChoiceToImageName(userChoice))
                                 .resizable()
-                                .frame(width: 50, height: 50)
+                                .frame(width: 40, height: 40)
                         }
+                        Spacer()
                         
                         HStack{
-                            Text("CPU:")
-                            Image(mapChoiceToString(computerChoice))
+                            Text("CPU: ")
+                            Image(mapChoiceToImageName(computerChoice))
                                 .resizable()
-                                .frame(width: 50, height: 50)
+                                .frame(width: 40, height: 40)
                         }
-                        
-                        
-                        Text("Result: \(result)")
-                            .padding()
-                        
-                        Text("Score: \(userScore) - \(computerScore)")
-                            .padding()
-                        
+                        Spacer()
+                        HStack{
+                            Text("Result: \(result)")
+                        }
+                        Spacer()
+                        HStack{
+                            Text("Score: \(userScore) - \(computerScore)")
+                        }
+                        Spacer()
                         if userScore == 3 || computerScore == 3 {
                             Text("Overall Winner: \(userScore == 3 ? "You" : "Computer")")
-                                .padding()
-                        }
+                            Spacer()
+                        } else { Text("Overall Winner: ")
+                            Spacer()                        }
+                        
                     }
                 }
             }
@@ -130,11 +135,11 @@ struct ContentView: View {
         }
         .background(Color.orange)
     }
-
+    
     func chooseOption(_ choice: Int) {
         userChoice = choice
         assignRandomChoice()
-
+        
         if let userChoice = userChoice {
             switch (userChoice, computerChoice) {
             case (1, 3), (2, 1), (3, 2):
@@ -150,11 +155,11 @@ struct ContentView: View {
             }
         }
     }
-
+    
     func assignRandomChoice() {
         computerChoice = Int.random(in: 1...3)
     }
-
+    
     func mapChoiceToString(_ choice: Int) -> String {
         switch choice {
         case 1:
@@ -165,6 +170,19 @@ struct ContentView: View {
             return "Scissors"
         default:
             return ""
+        }
+    }
+    
+    func mapChoiceToImageName(_ choice: Int) -> String {
+        switch choice {
+        case 1:
+            return "rock"
+        case 2:
+            return "paper"
+        case 3:
+            return "scissors"
+        default:
+            return "questionmark.square"
         }
     }
 }
